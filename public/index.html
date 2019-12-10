@@ -150,6 +150,12 @@
 
 		<div id="aplayer"></div>
 	</body>
+	<script type="text/javascript">
+		var targetProtocol = "https:";
+		if (window.location.protocol != targetProtocol)
+		 window.location.href = targetProtocol +
+		  window.location.href.substring(window.location.protocol.length);
+	</script>
 	<script>
 		$(function(){
 			//键盘松开事件
