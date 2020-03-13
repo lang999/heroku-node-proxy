@@ -1,211 +1,89 @@
-﻿<!doctype html>
-<html>
-	<head>
-		<meta charset="utf-8">
-		<title>Demontisa - Proxy</title>
-		<script src="js/jquery-2.0.0.min.js"></script>
-		<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css" integrity="sha256-uqQQGnDcmRKvhKwc5Vm4XT1GQ2oV6t1U0NR2N9tV+BQ=" crossorigin="anonymous" />
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js" integrity="sha256-6Y7CJDaltoeNgk+ZftgCD9jLgmGv4xKUo8nQ0HgAwVo=" crossorigin="anonymous"></script>
-		<style>
-			@import url("https://fonts.googleapis.com/css?family=Inconsolata:700");
-			* {
-				margin: 0;
-				padding: 0;
-				box-sizing: border-box;
-			}
-
-			html, body {
-				width: 100%;
-			}
-
-			body {
-				background: #252525;
-			}
-
-			.container {
-				position: absolute;
-				margin: auto;
-				top: 0;
-				left: 0;
-				right: 0;
-				bottom: 0;
-				width: 300px;
-				height: 100px;
-			}
-			.container .search {
-				position: absolute;
-				margin: auto;
-				top: 0;
-				right: 0;
-				bottom: 0;
-				left: 0;
-				width: 80px;
-				height: 80px;
-				background: crimson;
-				border-radius: 50%;
-				transition: all 1s;
-				z-index: 4;
-				box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.4);
-			}
-			.container .search:hover {
-				cursor: pointer;
-			}
-			.container .search::before {
-				content: "";
-				position: absolute;
-				margin: auto;
-				top: 22px;
-				right: 0;
-				bottom: 0;
-				left: 22px;
-				width: 12px;
-				height: 2px;
-				background: white;
-				transform: rotate(45deg);
-				transition: all .5s;
-			}
-			.container .search::after {
-				content: "";
-				position: absolute;
-				margin: auto;
-				top: -5px;
-				right: 0;
-				bottom: 0;
-				left: -5px;
-				width: 25px;
-				height: 25px;
-				border-radius: 50%;
-				border: 2px solid white;
-				transition: all .5s;
-			}
-			.container input {
-				font-family: 'Inconsolata', monospace;
-				position: absolute;
-				margin: auto;
-				top: 0;
-				right: 0;
-				bottom: 0;
-				left: 0;
-				width: 50px;
-				height: 50px;
-				outline: none;
-				border: none;
-				background: crimson;
-				color: white;
-				text-shadow: 0 0 10px crimson;
-				padding: 0 80px 0 20px;
-				border-radius: 30px;
-				box-shadow: 0 0 25px 0 crimson, 0 20px 25px 0 rgba(0, 0, 0, 0.2);
-				transition: all 1s;
-				opacity: 0;
-				z-index: 5;
-				font-weight: bolder;
-				letter-spacing: 0.1em;
-			}
-			.container input:hover {
-				cursor: pointer;
-			}
-			.container input:focus {
-				width: 300px;
-				opacity: 1;
-				cursor: text;
-			}
-			.container input:focus ~ .search {
-				right: -250px;
-				background: #151515;
-				z-index: 6;
-			}
-			.container input:focus ~ .search::before {
-				top: 0;
-				left: 0;
-				width: 25px;
-			}
-			.container input:focus ~ .search::after {
-				top: 0;
-				left: 0;
-				width: 25px;
-				height: 2px;
-				border: none;
-				background: white;
-				border-radius: 0%;
-				transform: rotate(-45deg);
-			}
-			.container input::placeholder {
-				color: white;
-				opacity: 0.5;
-				font-weight: bolder;
-			}
-		</style>
-
-	</head>
-	<body>
-			
-		<div class="container">
-
-			<input type="text" id="url" placeholder="google.com">
-
-			<div class="search"></div>
-		</div>
-
-		<div id="aplayer"></div>
-	</body>
-	<script type="text/javascript">
-		var targetProtocol = "https:";
-		if (window.location.protocol != targetProtocol)
-		 window.location.href = targetProtocol +
-		  window.location.href.substring(window.location.protocol.length);
-	</script>
+  
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="/style.css"/>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
 	<script>
-		$(function(){
-			//键盘松开事件
-			$("#url").keyup(function(){
-				//当松开回车键时触发
-				if(event.keyCode==13){
-					if($("#url").val() == ""){
-
-					}else{
-						//获取输入框内输入的内容
-						var $url = $("#url").val()
-						//设置跳转方式为打开新窗口
-						var openUrl = window.open('_blank')
-						//跳转至指定页面
-						openUrl.location = './proxy/' + $url
-					}
-					
-　　			}
-			})
-		})
+		function $(id){
+			return document.getElementById(id);
+		}
+		
+		// $('unblocker-form').onsubmit = function(){
+		//	var url = $('url').value;
+		//	if(url.substr(0,4) != "http"){
+		//		url = "http://" + url;
+		//	}
+		//	window.location.pathname = 'proxy/' + url;
+		//	return false;
+		//};
+		
+		function checkError(){
+			var search = window.location.search;
+			var start = search.indexOf('error=');
+			if(start > -1){
+				var stop = search.indexOf('&', start);
+				if(stop == -1){ stop = undefined; }
+				// +6 for "error="
+				var err = search.substr(start+6, stop);
+                var $error = $('error');
+				$error.innerText = $error.textContent = decodeURIComponent(err);
+				$error.style.display = "block";
+			}
+		}
+    
+		window.onload = function() { 
+			$('url').focus(); 
+			checkError(); 
+		}
 	</script>
-	<!--APlayer音乐播放器配置-->
-	<!--官方使用文档(https://aplayer.js.org/#/zh-Hans/)-->
-	<script>
-		const ap = new APlayer({
-			container: document.getElementById('aplayer'),
-			fixed: true,
-			lrcType: 3,
-			mutex: true,
-    		audio: [
-				/*
-					配置说明
-					{
-						name: '歌名',
-						artist: '歌手',
-						url: '歌曲链接',
-						cover: '歌曲封面链接',
-						lrc: '歌词链接(lrc格式)'
-					},
-
-					例：
-					{
-						name: '情字难',
-						artist: '糯米Nomi',
-						url: 'https://demontisa-oneindex.herokuapp.com/?/Music/%E6%83%85%E5%AD%97%E9%9A%BE%20-%20%E7%B3%AF%E7%B1%B3Nomi.mp3',
-						cover: 'https://p1.music.126.net/c9tNKwSq4BGFn-BQ8-hC3A==/109951164358519634.jpg',
-						lrc: 'https://demontisa-oneindex.herokuapp.com/?/Music/LRC/%E7%B3%AF%E7%B1%B3nomi%20-%20%E6%83%85%E5%AD%97%E9%9A%BE.lrc'
-					},
-				*/
-			]
-		});
-	</script>
-</html>
+<header class="header-banner">
+  <kiv class="container-width">
+    <div class="logo-container">
+      <div class="logo">
+		<a href="https://github.com/netptop/siteproxy">Github源码</a>
+      </div>
+    </div>
+    <div class="logo-right-container">
+      <div class="logo">
+      </div>
+    </div>
+    <br />
+    <div class="lead-title"> 从这里开始,不再被训戒</div>
+    <br />
+    <div class="descriptionSeg">1.建议您从浏览器打开网页,避免被微信窃听! </div>
+    <br />
+    <div class="descriptionSeg">2.!!!请勿广泛传播本代理， 以便尽量推迟本代理的失效时间!!!</div>
+    <br />
+    <div class="descriptionSeg">3.由于从本代理发出的Google请求过多, google会自动限制搜索流量;  如果google不能用,请使用bing和yahoo搜索引擎. </div>
+    <br />
+    <div class="descriptionSeg">4.请降低youtube视频的分辨率，因为免费服务器每月的流量非常非常有限, 超过的话其他人都无法使用了 </div>
+    <br />
+    <form class="lead-title">
+      <p>指定网址:<input class="lead-title" type="text" id="address" value="https://www.google.com">
+        <input id="addrAccess" class="lead-title button1" type="button" onclick="onsubmit" value="访问网站"/>
+      </p>
+      <input class="lead-title button1" type="button" onclick="./proxy/'www.google.com'" value="Google搜索"/>
+      <input class="lead-title button1" type="button" onclick="./proxy/'www.youtube.com'" value="Youtube(仅支持firefox浏览器)"/>
+      <input class="lead-title button1" type="button" onclick="./proxy/'www.bing.com/?mkt=en-us'" value="Bing搜索"/>
+      <input class="lead-title button1" type="button" onclick="./proxy/'search.yahoo.com/'" value="Yahoo搜索"/>
+      <input class="lead-title button1" type="button" onclick="./proxy/'zh.wikipedia.org'" value="维基百科"/>
+      <input class="lead-title button1" type="button" onclick="./proxy/'cmdh.me'" value="草莓🍓导航"/>
+      <input class="lead-title button1" type="button" onclick="./proxy/'/http/news.creaders.net/headline/'" value="万维读者"/>
+      <input class="lead-title button1" type="button" onclick="./proxy/'/https/www.wenxuecity.com'" value="文学城"/>
+      <input class="lead-title button1" type="button" onclick="window.location.href='/https/www.6parknews.com'" value="留园网"/>
+      <input class="lead-title button1" type="button" onclick="window.location.href='/https/www.thumbzilla.com//'" value="你想看的"/>
+      <input class="lead-title button1" type="button" onclick="window.location.href='/http/nrop1.herokuapp.com'" value="草榴社区-91破解-xv解析～admin～123456"/>
+      <input class="lead-title button1" type="button" onclick="window.location.href='/https/cn.pornhub.com'" value="PornHub"/>
+    </form>
+  </kiv>
+  <div class="container-width">
+    <div class="logo-container"> </div>
+    <div class="c9130">
+      <br/>
+      <br/>
+      <div class="clearfix">
+      </div>
+      <br/>
+      <br/>
+    </div>
+  </div>
+</header>
