@@ -1,211 +1,130 @@
-﻿<!doctype html>
+-<!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>Demontisa - Proxy</title>
-		<script src="js/jquery-2.0.0.min.js"></script>
-		<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css" integrity="sha256-uqQQGnDcmRKvhKwc5Vm4XT1GQ2oV6t1U0NR2N9tV+BQ=" crossorigin="anonymous" />
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js" integrity="sha256-6Y7CJDaltoeNgk+ZftgCD9jLgmGv4xKUo8nQ0HgAwVo=" crossorigin="anonymous"></script>
-		<style>
-			@import url("https://fonts.googleapis.com/css?family=Inconsolata:700");
-			* {
-				margin: 0;
-				padding: 0;
-				box-sizing: border-box;
-			}
+<head>
+  <title>通用Web代理 (Node Unblocker)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- header font -->
+  <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet" type="text/css">
+  
+  <!-- body font -->
+  <link href="https://fonts.googleapis.com/css?family=Droid+Sans" rel="stylesheet" type="text/css">
+  <link rel="shortcut icon" href="/favicon.ico"> 
+  <style type="text/css">
+  
+    /* fonts */
+    body { font-family: 'Droid Sans', arial, serif;  letter-spacing: 1px;}
+    h1 { font-family: 'Orbitron', arial, serif; letter-spacing: 2px;}
+    h2, h3, h4, h5, h6 { letter-spacing: 2px; font-weight: normal;}
+  
+    /* colors */
+    body { background-color: #000306; color: white;}
+    .container { background-color: #3F4038; border-color: #5B3E38}
+    a { color: #62BECB; }
+    a:hover {color: #82DEEB }
 
-			html, body {
-				width: 100%;
-			}
-
-			body {
-				background: #252525;
-			}
-
-			.container {
-				position: absolute;
-				margin: auto;
-				top: 0;
-				left: 0;
-				right: 0;
-				bottom: 0;
-				width: 300px;
-				height: 100px;
-			}
-			.container .search {
-				position: absolute;
-				margin: auto;
-				top: 0;
-				right: 0;
-				bottom: 0;
-				left: 0;
-				width: 80px;
-				height: 80px;
-				background: crimson;
-				border-radius: 50%;
-				transition: all 1s;
-				z-index: 4;
-				box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.4);
-			}
-			.container .search:hover {
-				cursor: pointer;
-			}
-			.container .search::before {
-				content: "";
-				position: absolute;
-				margin: auto;
-				top: 22px;
-				right: 0;
-				bottom: 0;
-				left: 22px;
-				width: 12px;
-				height: 2px;
-				background: white;
-				transform: rotate(45deg);
-				transition: all .5s;
-			}
-			.container .search::after {
-				content: "";
-				position: absolute;
-				margin: auto;
-				top: -5px;
-				right: 0;
-				bottom: 0;
-				left: -5px;
-				width: 25px;
-				height: 25px;
-				border-radius: 50%;
-				border: 2px solid white;
-				transition: all .5s;
-			}
-			.container input {
-				font-family: 'Inconsolata', monospace;
-				position: absolute;
-				margin: auto;
-				top: 0;
-				right: 0;
-				bottom: 0;
-				left: 0;
-				width: 50px;
-				height: 50px;
-				outline: none;
-				border: none;
-				background: crimson;
-				color: white;
-				text-shadow: 0 0 10px crimson;
-				padding: 0 80px 0 20px;
-				border-radius: 30px;
-				box-shadow: 0 0 25px 0 crimson, 0 20px 25px 0 rgba(0, 0, 0, 0.2);
-				transition: all 1s;
-				opacity: 0;
-				z-index: 5;
-				font-weight: bolder;
-				letter-spacing: 0.1em;
-			}
-			.container input:hover {
-				cursor: pointer;
-			}
-			.container input:focus {
-				width: 300px;
-				opacity: 1;
-				cursor: text;
-			}
-			.container input:focus ~ .search {
-				right: -250px;
-				background: #151515;
-				z-index: 6;
-			}
-			.container input:focus ~ .search::before {
-				top: 0;
-				left: 0;
-				width: 25px;
-			}
-			.container input:focus ~ .search::after {
-				top: 0;
-				left: 0;
-				width: 25px;
-				height: 2px;
-				border: none;
-				background: white;
-				border-radius: 0%;
-				transform: rotate(-45deg);
-			}
-			.container input::placeholder {
-				color: white;
-				opacity: 0.5;
-				font-weight: bolder;
-			}
-		</style>
-
-	</head>
-	<body>
-			
-		<div class="container">
-
-			<input type="text" id="url" placeholder="google.com">
-
-			<div class="search"></div>
-		</div>
-
-		<div id="aplayer"></div>
-	</body>
-	<script type="text/javascript">
-		var targetProtocol = "https:";
-		if (window.location.protocol != targetProtocol)
-		 window.location.href = targetProtocol +
-		  window.location.href.substring(window.location.protocol.length);
-	</script>
+	#error {  border:1px dotted white; background: brown; }
+    
+    /* stripes and borders */
+    
+    .main { background-repeat: repeat-x;  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAB9CAIAAADbWVFQAAADd0lEQVR4nO3d6VbbMBiE4Tcm3Tf2tRfSf+393wd03/dCk/6AgjF2otiSvpGsuYBY52HO4JPEMHn+4hl6eTqzPkFbptYHaMnRjLn1GW7muKKyPkMzR5KdOq4AMSxlKaSwxKXQ2axDyZ06ud4liWYdSnbq5IaNPVYqUphjJSSF7WYdSO7Uy+7+mDXrQLJTC6SwwkpRChOsRKWIj5WuFJEHfl9y0V85FyZes/YlO+UuRTSsDKSIg5WHFBE2a09yp173KknYZu1JdqqfFEGxMpMiHFZ+UgTCylKKEAO/K7nob3y0wnOzdiU75UUKv1h5S+ERK3spfG3WjuROvfX928vD6+1Idsq7FMOxxiPFQKxRSTEEa2xS9B74bclFfxf4Dac+L78t2anQUvTAGq0Uq2KNWYqVNmtLcqfeR/wwz/VSW5KdiimFI1aROs/yCxapyyy5ZpGqZ9HAb0ou+ge77991XnlTslOGUnRhFanWtFy/SHWluVkbkjv1UUCKRrM2JDslIkUdq0gtzcVZipRLKoqUc6brkov+SU8K88dRWqMptT7Tw5KVQq1ZylLAVGewPktKPaltusoBZaXqkThjElIoYKUihTlWQlLYDvwXSanH3XfpZueVlVoQmyOnKIUJVqJSwHQ+CX+QWr7GvZxjHs1xcYj6U5aVckw8rNSliIaVgRRx7rO+SUo9nK/8rmfwZslK9UhYrJykCIqVmRThsPKTItDAf5eUerD6ojfiv1myUsPjGStjKfxi5S2Fx836ISl1f/BO1eOnWbJSfuMBayRSDMcajxQDsUYlxZCB/ykpdc/rojfSs1myUkHTB2ucUvTAGq0Uq27WL0mpuyF3qp4VmiUrFS2uWEUKR6widZ7lWEXqMksG/rek1J1Yi97IombJSlmlE6tI3Uw7VpFqTctm/ZGUum20U/U0myUrpZBrWEVqca6witTSXGAVKZdM53AqKXVLYNEbqWSlBKP4NWtNqdOJHpasFDr/OfM8U72dAs7+L5VQs4Qeqq3lrLbpKlj6UohgJSGFAlYqUpgP/Jrkov/tuPe0bNaaoFO3FIZYyUlhhZWiFCabVUnu1Ezt4UygEnRykyIyVtJSxMRKXYpoWBlIEWfgJ5KL3uPPDgRv1kTQqZcUobFykiIoVmZSBNwsyZ1i2KczYZql6DRUiiBYmUrhHytfKeAfdPYd7TpexlgAAAAASUVORK5CYII=); }
+    .footer { min-height: 60px; background-repeat: repeat-x; background-position: bottom left; background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAA8CAIAAAAfXYiZAAAB+ElEQVR4nO3b11aDQBSF4T2IXWM3lhfxTt//PWKvsTfwIllLEobQZuZsYM4DyFkffyKBRJ2encBPsQmlF9BNHEtvoBul+LBiAEp6idQogK0sRdlUrMYnjwhLUTYVJzZiwQoom4rUxMmjwAoom4pSG8ljzTEmhV/duQucrzExDZKCbFkhpdRP9vuBWFmNk4JUWfOUUt95/2MEymqoFNyXtUAp9VXsusVpWY2WgsuyFimlPstcCzsqqwVScIPVDik4eBkuUUp9VPokaresNknBalnLlFLvNe5u2CqrfVKwVNYKpdRb7Ttm5stqqxSMl7VKKfVq6C6sybLaLQWDZa1RSr0YvbNvpqwuSMFIWeuUUs8WnhbVLas7UqhZVo9SamjtCWR1rF5kcA1jM7T5Ybfi3+6gFKqVtUEp9WT/1lzpI3RWCmXL2qSUenT11KXEcTouheJlbVFKPbh9RlzoaF5qNPllbVNK3Ut8oyXnmF4qObPK2qGUupP7/l3mkb1UevRl7VJK3Qp/p1NXlpfKmumy9iilbgikMFWWl5o9/4t4qdwZvwz3KaWumaQwKstLFZywTyl1xScF8Z+jaIdTqh8hZPsx1iWl1EEEsJXFLAUwlXVBKXWYeE9nWZBfCiRlnVNKHaWuE+TXbIoUxMsaUEodZ1x7Si7bLCkAf1M7eHbSdYGuAAAAAElFTkSuQmCC); }
+    .container { border-style: solid; border-width: 1px; border-radius: 10px;  -moz-border-radius: 10px;  -webkit-border-radius: 10px;  overflow:hidden;  /* otherwise the background image appears on top of the curved border */ }
+    
+    
+    /* layout */
+    body { text-align: center; line-height:180% }
+	a { margin: 10px}
+    .container { width: 760px; margin: 40px auto; text-align: left;  max-width: calc(100% - 10px);}
+    
+    h2, h3, h4, h5, h6 { margin-bottom: 0;  }
+    ul { line-height: 150%; }
+    ul, p {  margin-top: 5px; margin-bottom: 0; }
+    .main, .footer { padding: 1px 10px 0 10px; }
+    
+    #error {display: none; padding: 5px 10px; margin: 30px 10px; }
+    
+    form ul { list-style-type: none; padding-left: 25px;}
+    input[type=text] { width: 640px; max-width: calc(100% - 12em) }
+    
+    .footer { position: relative; clear: both;}
+    .footer p { margin:0; position: absolute; bottom: 10px;  right: 10px; padding-left: 10px; }
+    
+    #google-ad {
+        text-align: center;
+        margin: 10px auto;
+    }
+    @media(min-width: 768px) {
+        #google-ad {
+            margin: 0;
+            float:right; 
+            margin:4px 2px 2px 20px;
+        }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="main">
+      <h1>Node Unblocker</h1>
+      <div id="error"></div>
+      <form action="no-js" method="get" id="unblocker-form">
+        <p>
+          网址: 
+          <input type="text" id="url" name="url" autofocus="autofocus" value="http://www.google.com"/>
+          <input type="submit" value="浏览"/>
+        </p>
+      </form>
+      <h3><center>禁网导航</center></h3>
+	  <h4>实用工具</h4>
+		<a href="./proxy/https://www.google.com/" target="_blank">Google搜索</a>
+		<a href="./proxy/https://www.youtube.com" target="_blank">Youtube</a>
+	        <a href="./proxy/http://sexinsex.net/" target="_blank">sexinsex</a>
+	        <a href="./proxy/http://91jiexi.hengit.ga/" target="_blank">91破解用户：VIP91密码：86591234</a>
+		<a href="./proxy/https://www.xvideos.com/" target="_blank">xvideos</a>
+	        <a href="./proxy/https://cn.pornhub.com/" target="_blank">pornhub</a>
+	        <a href="./proxy/https://www.pornmd.com/" target="_blank">pornmd</a>
+    </div>
+	<br/>
+	<p><center>一键部署免费代理教程：<a href="https://github.com/lang999/heroku-node-proxy-1" target="_blank">heroku-node-proxy</a><center><p>
+    <div class="footer">
+      <p>特别鸣谢：<a href="https://github.com/nfriedly/node-unblocker">Node Unblocker</a> by <a href="http://nfriedly.com/" title="Node.js developer and JavaScript Expert">Nathan Friedly</a></p>
+    </div>
+  
+  </div>
 	<script>
-		$(function(){
-			//键盘松开事件
-			$("#url").keyup(function(){
-				//当松开回车键时触发
-				if(event.keyCode==13){
-					if($("#url").val() == ""){
-
-					}else{
-						//获取输入框内输入的内容
-						var $url = $("#url").val()
-						//设置跳转方式为打开新窗口
-						var openUrl = window.open('_blank')
-						//跳转至指定页面
-						openUrl.location = './proxy/' + $url
-					}
-					
-　　			}
-			})
-		})
+		function $(id){
+			return document.getElementById(id);
+		}
+		
+		// $('unblocker-form').onsubmit = function(){
+		//	var url = $('url').value;
+		//	if(url.substr(0,4) != "http"){
+		//		url = "http://" + url;
+		//	}
+		//	window.location.pathname = 'proxy/' + url;
+		//	return false;
+		//};
+		
+		function checkError(){
+			var search = window.location.search;
+			var start = search.indexOf('error=');
+			if(start > -1){
+				var stop = search.indexOf('&', start);
+				if(stop == -1){ stop = undefined; }
+				// +6 for "error="
+				var err = search.substr(start+6, stop);
+                var $error = $('error');
+				$error.innerText = $error.textContent = decodeURIComponent(err);
+				$error.style.display = "block";
+			}
+		}
+    
+		window.onload = function() { 
+			$('url').focus(); 
+			checkError(); 
+		}
 	</script>
-	<!--APlayer音乐播放器配置-->
-	<!--官方使用文档(https://aplayer.js.org/#/zh-Hans/)-->
-	<script>
-		const ap = new APlayer({
-			container: document.getElementById('aplayer'),
-			fixed: true,
-			lrcType: 3,
-			mutex: true,
-    		audio: [
-				/*
-					配置说明
-					{
-						name: '歌名',
-						artist: '歌手',
-						url: '歌曲链接',
-						cover: '歌曲封面链接',
-						lrc: '歌词链接(lrc格式)'
-					},
-
-					例：
-					{
-						name: '情字难',
-						artist: '糯米Nomi',
-						url: 'https://demontisa-oneindex.herokuapp.com/?/Music/%E6%83%85%E5%AD%97%E9%9A%BE%20-%20%E7%B3%AF%E7%B1%B3Nomi.mp3',
-						cover: 'https://p1.music.126.net/c9tNKwSq4BGFn-BQ8-hC3A==/109951164358519634.jpg',
-						lrc: 'https://demontisa-oneindex.herokuapp.com/?/Music/LRC/%E7%B3%AF%E7%B1%B3nomi%20-%20%E6%83%85%E5%AD%97%E9%9A%BE.lrc'
-					},
-				*/
-			]
-		});
-	</script>
+  
+  
+</body>
 </html>
